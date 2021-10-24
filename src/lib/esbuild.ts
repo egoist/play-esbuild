@@ -75,7 +75,6 @@ export function resolvePlugin(): Plugin {
 
         // Relative path
         if (args.path[0] === ".") {
-          console.log(args.path, args.importer)
           const absPath = join(args.importer, "..", args.path)
           for (const ext of RESOLVE_EXTENSIONS) {
             const file = state.files.get(
@@ -87,7 +86,7 @@ export function resolvePlugin(): Plugin {
               }
             }
           }
-          if (state.files.has(absPath)) {
+          if (state.files.has(absPath.replace(PROJECT_ROOT, ""))) {
             return {
               path: absPath,
             }
