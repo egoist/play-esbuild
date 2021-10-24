@@ -3,10 +3,11 @@ import type { OutputFile } from "esbuild-wasm"
 import { computed, ref, onMounted, watchEffect } from "vue"
 import { useEsbuild } from "../hooks/useEsbuild"
 import { getMode } from "../lib/editor"
-import { resolvePlugin, files, formatBuildErrors, logger } from "../lib/esbuild"
+import { resolvePlugin, formatBuildErrors, logger } from "../lib/esbuild"
 import CodeMirror from "./CodeMirror.vue"
 import BuildLogs from "./BuildLogs.vue"
 import { atou, debounce, utoa } from "../lib/utils"
+import { state } from "../lib/store"
 
 const building = ref(false)
 const buildError = ref<string | null>(null)
@@ -14,23 +15,24 @@ const buildError = ref<string | null>(null)
 const outputFiles = ref<null | OutputFile[]>(null)
 
 const activeFileName = ref<string>("index.ts")
+const renamingFileName = ref<string | null>(null)
 
 const activeFile = computed(() => {
-  return files.get(activeFileName.value)
+  return state.files.get(activeFileName.value)
 })
 
 const createNewFile = () => {
-  const name = `file-${files.size}.ts`
-  files.set(name, {
+  const name = `file-${state.files.size}.ts`
+  state.files.set(name, {
     content: ``,
   })
   activeFileName.value = name
 }
 
 const deleteFile = (name: string) => {
-  const names = [...files.keys()]
+  const names = [...state.files.keys()]
   const index = names.indexOf(name)
-  files.delete(name)
+  state.files.delete(name)
   const prevFileName = names[index - 1]
   activeFileName.value = prevFileName
 }
@@ -46,7 +48,9 @@ const bundle = async () => {
     buildError.value = null
     outputFiles.value = null
 
-    const userConfig = JSON.parse(files.get("esbuild.config.json")!.content)
+    const userConfig = JSON.parse(
+      state.files.get("esbuild.config.json")!.content
+    )
     const result = await esbuild.build({
       ...userConfig,
       entryPoints: ["/project/index.ts"],
@@ -85,7 +89,7 @@ const mode = computed(() => {
 })
 
 const updateHash = () => {
-  const hash = `#${utoa(JSON.stringify(Array.from(files)))}`
+  const hash = `#${utoa(JSON.stringify(Array.from(state.files)))}`
   if (hash !== location.hash) {
     history.pushState({}, "", hash)
   }
@@ -95,15 +99,29 @@ const hash = location.hash
 onMounted(() => {
   if (hash) {
     const arr = JSON.parse(atou(hash.slice(1)))
-    for (const item of arr) {
-      files.set(item[0], item[1])
-    }
+    state.files = new Map(arr)
   }
 })
 
 watchEffect(() => {
   updateHash()
 })
+
+const renameFile = (e: any) => {
+  const newName = e.target.value
+  const map = Array.from(state.files)
+  state.files = new Map(
+    map.map((item) => {
+      if (renamingFileName.value === item[0]) {
+        return [newName, item[1]]
+      }
+
+      return item
+    })
+  )
+  activeFileName.value = newName
+  renamingFileName.value = null
+}
 </script>
 
 <template>
@@ -115,7 +133,7 @@ watchEffect(() => {
             <a href="/" class="px-2">esbuild</a>
           </h1>
           <ul class="flex h-full">
-            <li v-for="[name] in files" :key="name" class="h-full">
+            <li v-for="[name] in state.files" :key="name" class="h-full">
               <button
                 class="
                   px-3
@@ -128,10 +146,20 @@ watchEffect(() => {
                 "
                 :class="[activeFileName === name && `bg-gray-100`]"
                 @click="activeFileName = name"
+                @dblclick="renamingFileName = name"
               >
-                <span>{{ name }}</span>
+                <input
+                  :value="name"
+                  @blur="renameFile"
+                  v-if="renamingFileName === name"
+                />
+                <span v-else>{{ name }}</span>
                 <span
-                  v-if="name !== 'index.ts' && name !== 'esbuild.config.json'"
+                  v-if="
+                    !renamingFileName &&
+                    name !== 'index.ts' &&
+                    name !== 'esbuild.config.json'
+                  "
                   class="
                     w-5
                     h-5

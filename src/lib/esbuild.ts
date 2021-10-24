@@ -1,11 +1,7 @@
 import { Plugin, Loader, formatMessages, PartialMessage } from "esbuild-wasm"
 import { reactive } from "vue"
 import { extname, join, urlJoin } from "./path"
-
-interface File {
-  content: string
-}
-
+import { state } from "./store"
 class Logger {
   lines: Set<string>
 
@@ -25,29 +21,6 @@ class Logger {
 export const logger = new Logger()
 
 export const PROJECT_ROOT = "/project/"
-
-export const files = reactive<Map<string, File>>(
-  new Map([
-    [
-      "index.ts",
-      {
-        content: "import { sum } from './sum'\n\nexport default sum(1,2)",
-      },
-    ],
-    [
-      "esbuild.config.json",
-      {
-        content: JSON.stringify({ format: "cjs" }, null, 2),
-      },
-    ],
-    [
-      "sum.ts",
-      {
-        content: "export const sum = (a: number, b: number) => a + b",
-      },
-    ],
-  ])
-)
 
 const URL_RE = /^https?:\/\//
 
@@ -105,14 +78,16 @@ export function resolvePlugin(): Plugin {
           console.log(args.path, args.importer)
           const absPath = join(args.importer, "..", args.path)
           for (const ext of RESOLVE_EXTENSIONS) {
-            const file = files.get(absPath.replace(PROJECT_ROOT, "") + ext)
+            const file = state.files.get(
+              absPath.replace(PROJECT_ROOT, "") + ext
+            )
             if (file) {
               return {
                 path: absPath + ext,
               }
             }
           }
-          if (files.has(absPath)) {
+          if (state.files.has(absPath)) {
             return {
               path: absPath,
             }
@@ -130,7 +105,7 @@ export function resolvePlugin(): Plugin {
       build.onLoad({ filter: /.*/ }, (args) => {
         if (args.path.startsWith(PROJECT_ROOT)) {
           const name = args.path.replace(PROJECT_ROOT, "")
-          const file = files.get(name)
+          const file = state.files.get(name)
           if (file) {
             return {
               contents: file.content,
