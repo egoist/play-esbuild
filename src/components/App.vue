@@ -6,7 +6,7 @@ import { getMode } from "../lib/editor"
 import { resolvePlugin, files, formatBuildErrors, logger } from "../lib/esbuild"
 import CodeMirror from "./CodeMirror.vue"
 import BuildLogs from "./BuildLogs.vue"
-import { atou, utoa } from "../lib/utils"
+import { atou, debounce, utoa } from "../lib/utils"
 
 const building = ref(false)
 const buildError = ref<string | null>(null)
@@ -73,6 +73,10 @@ const bundle = async () => {
     building.value = false
   }
 }
+
+const handleEditorChange = debounce((value: string) => {
+  activeFile.value!.content = value
+}, 200)
 
 const mode = computed(() => {
   if (!activeFileName.value) return "markup"
@@ -245,7 +249,7 @@ watchEffect(() => {
             v-if="activeFile"
             :value="activeFile.content"
             :mode="mode"
-            @change="value => activeFile!.content = value"
+            @change="handleEditorChange"
           ></CodeMirror>
         </div>
 
