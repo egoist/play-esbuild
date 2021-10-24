@@ -6,7 +6,6 @@ specifiers:
   '@vue/compiler-sfc': ^3.2.20
   codemirror: ^5.63.3
   esbuild-wasm: ^0.13.9
-  mrmime: ^1.0.0
   postcss: ^8.3.11
   tailwindcss: ^2.2.17
   typescript: ^4.4.4
@@ -19,7 +18,6 @@ devDependencies:
   '@vue/compiler-sfc': 3.2.20
   codemirror: 5.63.3
   esbuild-wasm: 0.13.9
-  mrmime: 1.0.0
   postcss: 8.3.11
   tailwindcss: 2.2.17_postcss@8.3.11
   typescript: 4.4.4
@@ -842,11 +840,6 @@ packages:
   /modern-normalize/1.1.0:
     resolution: {integrity: sha512-2lMlY1Yc1+CUy0gw4H95uNN7vjbpoED7NNRSBHE25nWfLBdmMzFCsPshlzbxHz+gYMcBEUN8V4pU16prcdPSgA==}
     engines: {node: '>=6'}
-    dev: true
-
-  /mrmime/1.0.0:
-    resolution: {integrity: sha512-a70zx7zFfVO7XpnQ2IX1Myh9yY4UYvfld/dikWRnsXxbyvMcfz+u6UfgNAtH+k2QqtJuzVpv6eLTx1G2+WKZbQ==}
-    engines: {node: '>=10'}
     dev: true
 
   /nanoid/3.1.30:
