@@ -250,6 +250,12 @@ watchEffect(() => {
         </div>
 
         <div class="w-1/2 h-full overflow-auto">
+          <div
+            v-if="esbuildLoading"
+            class="p-3 bg-blue-500 rounded-lg text-white mb-4"
+          >
+            Loading the WASM build of esbuild..
+          </div>
           <div class="p-3" v-if="buildError">
             <div
               class="p-3 bg-red-500 text-white rounded-lg mb-4 overflow-auto"
