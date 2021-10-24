@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-esbuild": "cp node_modules/esbuild-wasm/esbuild.wasm public/esbuild.wasm"
+    "copy-esbuild": "cp node_modules/esbuild-wasm/esbuild.wasm public/esbuild.wasm",
+    "dev": "vite",
+    "build": "npm run copy-esbuild && vite build"
   },
   "keywords": [],
   "author": "",
