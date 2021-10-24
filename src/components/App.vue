@@ -21,6 +21,9 @@ const activeFile = computed(() => {
   return state.files.get(activeFileName.value)
 })
 
+const isBuiltinFiles = (name: string) =>
+  ["index.ts", "esbuild.config.json"].includes(name)
+
 const createNewFile = () => {
   const name = `file-${state.files.size}.ts`
   state.files.set(name, {
@@ -146,7 +149,7 @@ const renameFile = (e: any) => {
                 "
                 :class="[activeFileName === name && `bg-gray-100`]"
                 @click="activeFileName = name"
-                @dblclick="renamingFileName = name"
+                @dblclick="!isBuiltinFiles(name) && (renamingFileName = name)"
               >
                 <input
                   :value="name"
@@ -155,11 +158,7 @@ const renameFile = (e: any) => {
                 />
                 <span v-else>{{ name }}</span>
                 <span
-                  v-if="
-                    !renamingFileName &&
-                    name !== 'index.ts' &&
-                    name !== 'esbuild.config.json'
-                  "
+                  v-if="!renamingFileName && !isBuiltinFiles(name)"
                   class="
                     w-5
                     h-5
