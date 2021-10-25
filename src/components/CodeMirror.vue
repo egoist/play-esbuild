@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, defineProps, defineEmits, watchEffect } from "vue"
+import { ref, onMounted, watchEffect } from "vue"
 import CodeMirror from "codemirror"
 import "codemirror/mode/javascript/javascript"
 import "codemirror/mode/jsx/jsx"

@@ -9,6 +9,13 @@
   <body>
     <div id="app"></div>
     <script src="/src/main.ts" type="module"></script>
-    <script async data-api="/_hive" src="/bee.js"></script>
+    <% if (prod) { %>
+    <script
+      async
+      defer
+      data-website-id="7288004f-a8dd-412e-95d0-92845506b2cf"
+      src="https://umami.egoist.sh/umami.js"
+    ></script>
+    <% } %>
   </body>
 </html>
