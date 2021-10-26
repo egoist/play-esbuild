@@ -11,6 +11,10 @@ pnpm i
 pnpm run dev
 ```
 
+## Sponsors
+
+[![sponsors](https://sponsors-images.egoist.sh/sponsors.svg)](https://github.com/sponsors/egoist)
+
 ## License
 
 MIT
