@@ -94,6 +94,17 @@ export function resolvePlugin(): Plugin {
           throw new Error(`file not found`)
         }
 
+        // External modules
+        const { external = [] } = build.initialOptions;
+        function match(it: string): boolean {
+          if (it === args.path) return true; // import 'foo' & external: ['foo']
+          if (args.path.startsWith(`${it}/`)) return true; // import 'foo/bar.js' & external: ['foo']
+          return false;
+        }
+        if (external.find(match)) {
+          return undefined;
+        }
+
         return {
           path: `https://unpkg.com/${args.path}`,
           namespace: "http-url",
