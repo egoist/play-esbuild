@@ -1,7 +1,10 @@
 import { Plugin, Loader, formatMessages, PartialMessage } from "esbuild-wasm"
 import { reactive } from "vue"
+import { resolve, legacy } from "resolve.exports"
+import parsePackageName from "parse-package-name"
 import { extname, join, urlJoin } from "./path"
 import { state } from "./store"
+import { builtinModules } from "./builtin-modules"
 class Logger {
   lines: Set<string>
 
@@ -27,10 +30,27 @@ const URL_RE = /^https?:\/\//
 // https://esbuild.github.io/api/#resolve-extensions
 const RESOLVE_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js", ".css", ".json"]
 
+const CDN_URL = "https://cdn.jsdelivr.net/npm"
+
 export function resolvePlugin(): Plugin {
   return {
     name: "resolve",
     setup(build) {
+      // External modules
+      const external = [
+        ...(build.initialOptions.external || []),
+        ...builtinModules,
+      ]
+
+      const isExternal = (id: string) => {
+        function match(it: string): boolean {
+          if (it === id) return true // import 'foo' & external: ['foo']
+          if (id.startsWith(`${it}/`)) return true // import 'foo/bar.js' & external: ['foo']
+          return false
+        }
+        return external.find(match)
+      }
+
       build.onStart(() => {
         logger.clear()
       })
@@ -54,9 +74,11 @@ export function resolvePlugin(): Plugin {
       // the newly resolved URL in the "http-url" namespace so imports
       // inside it will also be resolved as URLs recursively.
       build.onResolve({ filter: /.*/, namespace: "http-url" }, (args) => {
+        if (isExternal(args.path)) return { external: true, path: args.path }
+
         if (!args.path.startsWith(".")) {
           return {
-            path: `https://unpkg.com/${args.path}`,
+            path: `${CDN_URL}/${args.path}`,
             namespace: "http-url",
           }
         }
@@ -66,7 +88,7 @@ export function resolvePlugin(): Plugin {
         }
       })
 
-      build.onResolve({ filter: /.*/ }, (args) => {
+      build.onResolve({ filter: /.*/ }, async (args) => {
         if (args.path.startsWith(PROJECT_ROOT)) {
           return {
             path: args.path,
@@ -94,19 +116,30 @@ export function resolvePlugin(): Plugin {
           throw new Error(`file not found`)
         }
 
-        // External modules
-        const { external = [] } = build.initialOptions;
-        function match(it: string): boolean {
-          if (it === args.path) return true; // import 'foo' & external: ['foo']
-          if (args.path.startsWith(`${it}/`)) return true; // import 'foo/bar.js' & external: ['foo']
-          return false;
+        if (isExternal(args.path)) return { external: true, path: args.path }
+
+        const parsed = parsePackageName(args.path)
+        let subpath = parsed.path
+        if (!subpath) {
+          const pkg = await fetch(
+            `${CDN_URL}/${parsed.name}/package.json`
+          ).then((res) => res.json())
+          const p =
+            resolve(pkg, ".", {
+              require:
+                args.kind === "require-call" || args.kind === "require-resolve",
+            }) || legacy(pkg)
+          if (typeof p === "string") {
+            subpath = p.replace(/^\.?\/?/, "/")
+          }
         }
-        if (external.find(match)) {
-          return undefined;
+
+        if (subpath && subpath[0] !== "/") {
+          subpath = `/${subpath}`
         }
 
         return {
-          path: `https://unpkg.com/${args.path}`,
+          path: `${CDN_URL}/${parsed.name}${subpath}`,
           namespace: "http-url",
         }
       })
@@ -125,10 +158,6 @@ export function resolvePlugin(): Plugin {
         }
       })
 
-      // When a URL is loaded, we want to actually download the content
-      // from the internet. This has just enough logic to be able to
-      // handle the example import from unpkg.com but in reality this
-      // would probably need to be more complex.
       build.onLoad({ filter: /.*/, namespace: "http-url" }, async (args) => {
         logger.log(`Fetching ${args.path}`)
         const res = await fetch(args.path)
@@ -150,6 +179,9 @@ function inferLoader(p: string): Loader {
   const ext = extname(p)
   if (RESOLVE_EXTENSIONS.includes(ext)) {
     return ext.slice(1) as Loader
+  }
+  if (ext === ".mjs" || ext === ".cjs") {
+    return "js"
   }
   return "text"
 }

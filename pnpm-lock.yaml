@@ -3,12 +3,15 @@ lockfileVersion: 5.3
 specifiers:
   '@types/codemirror': ^5.60.5
   '@types/ejs': ^3.1.0
+  '@types/parse-package-name': ^0.1.0
   '@vitejs/plugin-vue': ^1.9.3
   '@vue/compiler-sfc': ^3.2.20
   codemirror: ^5.63.3
   ejs: ^3.1.6
   esbuild-wasm: ^0.13.9
+  parse-package-name: ^0.1.0
   postcss: ^8.3.11
+  resolve.exports: ^1.1.0
   tailwindcss: ^2.2.17
   typescript: ^4.4.4
   vite: ^2.6.10
@@ -17,12 +20,15 @@ specifiers:
 devDependencies:
   '@types/codemirror': 5.60.5
   '@types/ejs': 3.1.0
+  '@types/parse-package-name': 0.1.0
   '@vitejs/plugin-vue': 1.9.3_vite@2.6.10
   '@vue/compiler-sfc': 3.2.20
   codemirror: 5.63.3
   ejs: 3.1.6
   esbuild-wasm: 0.13.9
+  parse-package-name: 0.1.0
   postcss: 8.3.11
+  resolve.exports: 1.1.0
   tailwindcss: 2.2.17_postcss@8.3.11
   typescript: 4.4.4
   vite: 2.6.10
@@ -94,6 +100,10 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: true
+
+  /@types/parse-package-name/0.1.0:
+    resolution: {integrity: sha512-+vF4M3Cd3Ec22Uwb+OKhDrSAcXQ5I6evRx+1letx4KzfzycU+AOEDHnCifus8In11i8iYNFXPfzg9HWTcC1h+Q==}
     dev: true
 
   /@types/tern/0.23.4:
@@ -923,6 +933,11 @@ packages:
       lines-and-columns: 1.1.6
     dev: true
 
+  /parse-package-name/0.1.0:
+    resolution: {integrity: sha1-P0Tdg4/rTCvkvzGLrkR313BrreQ=}
+    engines: {node: '>=4'}
+    dev: true
+
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha1-F0uSaHNVNP+8es5r9TpanhtcX18=}
     engines: {node: '>=0.10.0'}
@@ -1049,6 +1064,11 @@ packages:
   /resolve-from/5.0.0:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
     engines: {node: '>=8'}
+    dev: true
+
+  /resolve.exports/1.1.0:
+    resolution: {integrity: sha512-J1l+Zxxp4XK3LUDZ9m60LRJF/mAe4z6a4xyabPHk7pvK5t35dACV32iIjJDFeWZFfZlO29w6SZ67knR0tHzJtQ==}
+    engines: {node: '>=10'}
     dev: true
 
   /resolve/1.20.0:
