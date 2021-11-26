@@ -1,7 +1,7 @@
 import { Plugin, Loader, formatMessages, PartialMessage } from "esbuild-wasm"
 import { reactive } from "vue"
 import { resolve, legacy } from "resolve.exports"
-import parsePackageName from "parse-package-name"
+import { parse as parsePackageName } from "parse-package-name"
 import { extname, join, urlJoin } from "./path"
 import { state } from "./store"
 import { builtinModules } from "./builtin-modules"
@@ -30,9 +30,15 @@ const URL_RE = /^https?:\/\//
 // https://esbuild.github.io/api/#resolve-extensions
 const RESOLVE_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js", ".css", ".json"]
 
-const CDN_URL = "https://cdn.jsdelivr.net/npm"
+export function resolvePlugin({
+  cdnUrl = "https://unpkg.com",
+}: {
+  cdnUrl: string
+}): Plugin {
+  const makeCDNUrl = (p: string) => {
+    return cdnUrl + "/" + p.replace(/^\//, "")
+  }
 
-export function resolvePlugin(): Plugin {
   return {
     name: "resolve",
     setup(build) {
@@ -78,7 +84,7 @@ export function resolvePlugin(): Plugin {
 
         if (!args.path.startsWith(".")) {
           return {
-            path: `${CDN_URL}/${args.path}`,
+            path: makeCDNUrl(args.path),
             namespace: "http-url",
           }
         }
@@ -122,7 +128,7 @@ export function resolvePlugin(): Plugin {
         let subpath = parsed.path
         if (!subpath) {
           const pkg = await fetch(
-            `${CDN_URL}/${parsed.name}/package.json`
+            makeCDNUrl(`${parsed.name}@${parsed.version}/package.json`)
           ).then((res) => res.json())
           const p =
             resolve(pkg, ".", {
@@ -139,7 +145,7 @@ export function resolvePlugin(): Plugin {
         }
 
         return {
-          path: `${CDN_URL}/${parsed.name}${subpath}`,
+          path: makeCDNUrl(`${parsed.name}@${parsed.version}${subpath}`),
           namespace: "http-url",
         }
       })

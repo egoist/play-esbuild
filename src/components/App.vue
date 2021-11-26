@@ -51,7 +51,7 @@ const bundle = async () => {
     buildError.value = null
     outputFiles.value = null
 
-    const userConfig = JSON.parse(
+    const { cdnUrl, ...userConfig } = JSON.parse(
       state.files.get("esbuild.config.json")!.content
     )
     const result = await esbuild.build({
@@ -61,7 +61,7 @@ const bundle = async () => {
       format: userConfig.format || "cjs",
       write: false,
       bundle: true,
-      plugins: [resolvePlugin()],
+      plugins: [resolvePlugin({ cdnUrl })],
     })
 
     outputFiles.value = result.outputFiles

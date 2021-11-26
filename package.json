@@ -21,7 +21,7 @@
     "codemirror": "^5.63.3",
     "ejs": "^3.1.6",
     "esbuild-wasm": "^0.13.9",
-    "parse-package-name": "^0.1.0",
+    "parse-package-name": "^1.0.0",
     "postcss": "^8.3.11",
     "resolve.exports": "^1.1.0",
     "tailwindcss": "^2.2.17",

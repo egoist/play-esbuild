@@ -9,7 +9,7 @@ specifiers:
   codemirror: ^5.63.3
   ejs: ^3.1.6
   esbuild-wasm: ^0.13.9
-  parse-package-name: ^0.1.0
+  parse-package-name: ^1.0.0
   postcss: ^8.3.11
   resolve.exports: ^1.1.0
   tailwindcss: ^2.2.17
@@ -26,7 +26,7 @@ devDependencies:
   codemirror: 5.63.3
   ejs: 3.1.6
   esbuild-wasm: 0.13.9
-  parse-package-name: 0.1.0
+  parse-package-name: 1.0.0
   postcss: 8.3.11
   resolve.exports: 1.1.0
   tailwindcss: 2.2.17_postcss@8.3.11
@@ -933,9 +933,8 @@ packages:
       lines-and-columns: 1.1.6
     dev: true
 
-  /parse-package-name/0.1.0:
-    resolution: {integrity: sha1-P0Tdg4/rTCvkvzGLrkR313BrreQ=}
-    engines: {node: '>=4'}
+  /parse-package-name/1.0.0:
+    resolution: {integrity: sha512-kBeTUtcj+SkyfaW4+KBe0HtsloBJ/mKTPoxpVdA57GZiPerREsUWJOhVj9anXweFiJkm5y8FG1sxFZkZ0SN6wg==}
     dev: true
 
   /path-is-absolute/1.0.1:

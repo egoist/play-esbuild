@@ -11,7 +11,11 @@ export const state = reactive({
     [
       "esbuild.config.json",
       {
-        content: JSON.stringify({ format: "cjs" }, null, 2),
+        content: JSON.stringify(
+          { format: "cjs", cdnUrl: "https://cdn.skypack.dev" },
+          null,
+          2
+        ),
       },
     ],
     [
