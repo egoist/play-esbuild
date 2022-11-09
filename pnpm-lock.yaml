@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@types/codemirror': ^5.60.5
@@ -8,7 +8,7 @@ specifiers:
   '@vue/compiler-sfc': ^3.2.20
   codemirror: ^5.63.3
   ejs: ^3.1.6
-  esbuild-wasm: ^0.13.9
+  esbuild-wasm: ^0.15.13
   parse-package-name: ^1.0.0
   postcss: ^8.3.11
   resolve.exports: ^1.1.0
@@ -25,7 +25,7 @@ devDependencies:
   '@vue/compiler-sfc': 3.2.20
   codemirror: 5.63.3
   ejs: 3.1.6
-  esbuild-wasm: 0.13.9
+  esbuild-wasm: 0.15.13
   parse-package-name: 1.0.0
   postcss: 8.3.11
   resolve.exports: 1.1.0
@@ -43,8 +43,13 @@ packages:
       '@babel/highlight': 7.14.5
     dev: true
 
-  /@babel/helper-validator-identifier/7.15.7:
-    resolution: {integrity: sha512-K4JvCtQqad9OY2+yTU8w+E82ywk/fe+ELNlt1G8z3bVGlZfn/hOcQQsUhGhW/N+tb3fxK800wLtKOE/aM0m72w==}
+  /@babel/helper-string-parser/7.19.4:
+    resolution: {integrity: sha512-nHtDoQcuqFmwYNYPz3Rah5ph2p8PFeFCsZk9A/48dPc/rGocJ5J3hAAZ7pb76VWX3fZKu+uEr/FhH5jLx7umrw==}
+    engines: {node: '>=6.9.0'}
+    dev: true
+
+  /@babel/helper-validator-identifier/7.19.1:
+    resolution: {integrity: sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==}
     engines: {node: '>=6.9.0'}
     dev: true
 
@@ -52,7 +57,7 @@ packages:
     resolution: {integrity: sha512-qf9u2WFWVV0MppaL877j2dBtQIDgmidgjGk5VIMw3OadXvYaXn66U1BFlH2t4+t3i+8PhedppRv+i40ABzd+gg==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/helper-validator-identifier': 7.15.7
+      '@babel/helper-validator-identifier': 7.19.1
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: true
@@ -61,6 +66,17 @@ packages:
     resolution: {integrity: sha512-BRYa3wcQnjS/nqI8Ac94pYYpJfojHVvVXJ97+IDCImX4Jc8W8Xv1+47enbruk+q1etOpsQNwnfFcNGw+gtPGxA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.20.2
+    dev: true
+
+  /@babel/types/7.20.2:
+    resolution: {integrity: sha512-FnnvsNWgZCr232sqtXggapvlkk/tuwR/qhGzcmxI0GXLCjmPYQPzio2FbdlWuY6y1sHFfQKk+rRbUZ9VStQMog==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/helper-string-parser': 7.19.4
+      '@babel/helper-validator-identifier': 7.19.1
+      to-fast-properties: 2.0.0
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -548,9 +564,9 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-wasm/0.13.9:
-    resolution: {integrity: sha512-qMLSYVSlm6ZrV1OqXYPHelniJns2DbUI0MxwZyNGrym/arrEX19T2xfJvzujLHXVShBRHEMLgplJkNtQ2NXapQ==}
-    engines: {node: '>=8'}
+  /esbuild-wasm/0.15.13:
+    resolution: {integrity: sha512-0am8fvHKACwofWQxtZLTMv4mDiDwUrdt0DyRaQ2r7YWIpkmpg4GWYy0EyW+gPjiPHzkZKqN9d3UYsZGgvaAASw==}
+    engines: {node: '>=12'}
     hasBin: true
     dev: true
 
@@ -1195,6 +1211,11 @@ packages:
     engines: {node: '>=8.17.0'}
     dependencies:
       rimraf: 3.0.2
+    dev: true
+
+  /to-fast-properties/2.0.0:
+    resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
+    engines: {node: '>=4'}
     dev: true
 
   /to-regex-range/5.0.1:
