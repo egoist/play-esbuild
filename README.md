@@ -1,6 +1,6 @@
 # play-esbuild
 
-Try esbuild online: https://esbuild.egoist.sh
+Try esbuild online: https://esbuild.egoist.dev
 
 ## Development
 
@@ -13,7 +13,7 @@ pnpm run dev
 
 ## Sponsors
 
-[![sponsors](https://sponsors-images.egoist.sh/sponsors.svg)](https://github.com/sponsors/egoist)
+[![sponsors](https://sponsors-images.egoist.dev/sponsors.svg)](https://github.com/sponsors/egoist)
 
 ## License
 
