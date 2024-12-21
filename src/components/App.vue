@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { OutputFile } from "esbuild-wasm"
+import { type OutputFile, version } from "esbuild-wasm"
 import { computed, ref, onMounted, watchEffect } from "vue"
 import { useEsbuild } from "../hooks/useEsbuild"
 import { getMode } from "../lib/editor"
@@ -65,7 +65,7 @@ const bundle = async () => {
     })
 
     outputFiles.value = result.outputFiles || null
-    console.log("bundle success")
+    console.debug("bundle success")
   } catch (error) {
     // @ts-expect-error
     if (error.errors) {
@@ -136,8 +136,9 @@ const renameFile = (e: any) => {
     <div class="flex flex-col h-screen">
       <header class="flex justify-between items-center border-b h-header pr-3">
         <div class="flex items-center h-full">
-          <h1 class="font-bold text-xl">
-            <a href="/" class="px-2">esbuild</a>
+          <h1 class="flex gap-0.5 mx-2 items-center">
+            <a href="/" class="font-bold text-xl">esbuild</a>
+            <sup class="text-xs text-zinc-500">{{ version }}</sup>
           </h1>
           <ul class="flex h-full">
             <li v-for="[name] in state.files" :key="name" class="h-full">
