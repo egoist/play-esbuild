@@ -47,7 +47,6 @@ onMounted(() => {
   })
 
   watchEffect(() => {
-    console.log(props.mode)
     cm.setOption("mode", props.mode)
   })
 })

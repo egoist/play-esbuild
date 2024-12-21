@@ -58,13 +58,13 @@ const bundle = async () => {
       ...userConfig,
       entryPoints: ["/project/index.ts"],
       outdir: "/dist",
-      format: userConfig.format || "cjs",
+      format: userConfig.format || "esm",
       write: false,
       bundle: true,
       plugins: [resolvePlugin({ cdnUrl })],
     })
 
-    outputFiles.value = result.outputFiles
+    outputFiles.value = result.outputFiles || null
     console.log("bundle success")
   } catch (error) {
     // @ts-expect-error
@@ -108,6 +108,10 @@ onMounted(() => {
 
 watchEffect(() => {
   updateHash()
+
+  if (!esbuildLoading.value) {
+    bundle()
+  }
 })
 
 const renameFile = (e: any) => {
@@ -138,15 +142,7 @@ const renameFile = (e: any) => {
           <ul class="flex h-full">
             <li v-for="[name] in state.files" :key="name" class="h-full">
               <button
-                class="
-                  px-3
-                  h-full
-                  flex
-                  items-center
-                  select-none
-                  space-x-2
-                  group
-                "
+                class="px-3 h-full flex items-center select-none space-x-2 group"
                 :class="[activeFileName === name && `bg-gray-100`]"
                 @click="activeFileName = name"
                 @dblclick="!isBuiltinFiles(name) && (renamingFileName = name)"
@@ -159,18 +155,7 @@ const renameFile = (e: any) => {
                 <span v-else>{{ name }}</span>
                 <span
                   v-if="!renamingFileName && !isBuiltinFiles(name)"
-                  class="
-                    w-5
-                    h-5
-                    flex
-                    items-center
-                    justify-center
-                    rounded-md
-                    invisible
-                    bg-gray-200
-                    hover:bg-red-600 hover:text-white
-                    group-hover:visible
-                  "
+                  class="w-5 h-5 flex items-center justify-center rounded-md invisible bg-gray-200 hover:bg-red-600 hover:text-white group-hover:visible"
                   @click.stop="deleteFile(name)"
                   ><svg
                     class="w-3 h-3"
@@ -233,18 +218,7 @@ const renameFile = (e: any) => {
               ></path></svg
           ></a>
           <button
-            class="
-              bg-blue-500
-              rounded-lg
-              text-white
-              h-8
-              text-sm
-              px-3
-              pl-2
-              flex
-              items-center
-              space-x-2
-            "
+            class="bg-blue-500 rounded-lg text-white h-8 text-sm px-3 pl-2 flex items-center space-x-2 disabled:opacity-50"
             :class="[building && 'opacity-50']"
             @click="bundle"
             :disabled="building"

@@ -5,23 +5,23 @@ export const state = reactive({
     [
       "index.ts",
       {
-        content: "import { sum } from './sum'\n\nexport default sum(1,2)",
+        content: `
+import { pipe, string, email } from 'valibot'
+
+const schema = pipe(string(), email())
+
+console.log(schema.parse('hi@exmaple.com'))
+        `.trim(),
       },
     ],
     [
       "esbuild.config.json",
       {
         content: JSON.stringify(
-          { format: "cjs", cdnUrl: "https://cdn.skypack.dev" },
+          { format: "esm", cdnUrl: "https://esm.sh" },
           null,
           2
         ),
-      },
-    ],
-    [
-      "sum.ts",
-      {
-        content: "export const sum = (a: number, b: number) => a + b",
       },
     ],
   ]),
