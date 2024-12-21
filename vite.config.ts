@@ -9,8 +9,8 @@ export default defineConfig((ctx) => {
       {
         name: "ejs-html",
         transformIndexHtml: {
-          enforce: "pre",
-          transform(html) {
+          order: "pre",
+          handler(html) {
             return ejs.render(html, { prod: ctx.mode === "production" })
           },
         },
